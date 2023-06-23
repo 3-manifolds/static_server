@@ -5,6 +5,7 @@ from threading import Thread
 import os
 import sys
 import email
+import shutil
 import datetime
 import webbrowser
 import urllib.parse
@@ -62,10 +63,10 @@ class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
         try:
             f = open(path + '.gz', 'rb')
             have_gz = True
-        except OSError:
+        except (FileNotFoundError, OSError):
             try:
                 f = open(path, 'rb')
-            except OSError:
+            except (FileNotFoundError, OSError):
                 self.send_error(HTTPStatus.NOT_FOUND,
                     "File not found: %s" % path)
                 return None
@@ -112,6 +113,14 @@ class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
             f.close()
             raise
 
+    def copyfile(self, source, outputfile):
+        try:
+            shutil.copyfileobj(source, outputfile)
+        except (BrokenPipeError, ConnectionResetError):
+            # Ignore exceptions when the browser closes the connection
+            # while receiving a response. They seem to try again anyway.
+            pass
+
 class StaticServer:
     """Runs an HTTP server in a background thread.
 
@@ -120,22 +129,21 @@ class StaticServer:
     """ 
 
     def __init__(self, root_dir):
-        self.site_dir = os.path.abspath(root_dir)
-        self.url = None
+        self.site_root = os.path.abspath(root_dir)
+        self.httpd = None
         
     def start(self):
         server_address = ('', 0)
-        handler = partial(GzipHTTPRequestHandler, directory=self.site_dir)
+        handler = partial(GzipHTTPRequestHandler, directory=self.site_root)
         self.httpd = ThreadingHTTPServer(server_address, handler)
         self.server_thread = Thread(target=self.httpd.serve_forever,
                                         daemon=True)
         self.server_thread.start()
 
-    def view_site(self):
-        if self.httpd and self.server_thread.is_alive():
-            port = self.httpd.server_address[1]
-            url = 'http://localhost:%s/' % port
-            webbrowser.open_new_tab(url)
-        else:
-            raise RuntimeError('HTTP server is not running.')
+    def view(self, path=''):
+        if not self.httpd or not self.server_thread.is_alive():
+            self.start()
+        port = self.httpd.server_address[1]
+        url = os.path.join('http://localhost:%s' % port, path)
+        webbrowser.open_new_tab(url)
         
