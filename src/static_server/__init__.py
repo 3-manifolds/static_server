@@ -9,6 +9,9 @@ import shutil
 import datetime
 import webbrowser
 import urllib.parse
+import importlib.metadata
+
+__version__ = '1.0.0'
 
 class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
 

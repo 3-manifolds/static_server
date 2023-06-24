@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "static_server"
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "static_server.__version__"}
+
+[metadata]
+authors = [
+    "Marc Culler <culler@users.noreply.github.com>",
+    "Nathan M. Dunfield <nathan@dunfield.info>",
+    "Matthias Görner <enischte@gmail.com>"
+]
+long_description = "README.rst"
+url = "https://github.com/3-manifolds/static_server"
+license = "GPLv2+"
+keywords = "http, server, gzip, documentation"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Topic :: Software Development :: Documentation"
+]
