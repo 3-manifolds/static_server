@@ -3,11 +3,11 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "static_server"
-dynamic = ["version"]
+name = "cocoserver"
+dynamic = ["version", "readme", "description"]
 
 [tool.setuptools.dynamic]
-version = {attr = "static_server.__version__"}
+version = {attr = "cocoserver.__version__"}
 
 [metadata]
 authors = [
@@ -15,12 +15,15 @@ authors = [
     "Nathan M. Dunfield <nathan@dunfield.info>",
     "Matthias Görner <enischte@gmail.com>"
 ]
+maintainers = [
+    "Marc Culler <culler@users.noreply.github.com>",
+    "Nathan M. Dunfield <nathan@dunfield.info>",
+    "Matthias Görner <enischte@gmail.com>"
+]
 readme = "README.rst"
-description = "A simple HTTP server for static local content."
+description = "A local HTTP server for compressed content."
 long-description_content_type = "text/x-rst"
-long_description = """This is a test
-"""
-urls = ["https://github.com/3-manifolds/static_server"]
+urls = ["https://github.com/3-manifolds/cocoserver"]
 license = "GPLv2+"
 keywords = "http, server, gzip, documentation"
 classifiers = [
