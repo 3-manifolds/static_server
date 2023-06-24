@@ -15,8 +15,12 @@ authors = [
     "Nathan M. Dunfield <nathan@dunfield.info>",
     "Matthias Görner <enischte@gmail.com>"
 ]
-long_description = "README.rst"
-url = "https://github.com/3-manifolds/static_server"
+readme = "README.rst"
+description = "A simple HTTP server for static local content."
+long-description_content_type = "text/x-rst"
+long_description = """This is a test
+"""
+urls = ["https://github.com/3-manifolds/static_server"]
 license = "GPLv2+"
 keywords = "http, server, gzip, documentation"
 classifiers = [
