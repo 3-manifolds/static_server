@@ -11,7 +11,7 @@ import webbrowser
 import urllib.parse
 import importlib.metadata
 
-__version__ = '1.0.0rc0'
+__version__ = '1.0.1'
 
 class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
 
@@ -143,7 +143,7 @@ class StaticServer:
                                         daemon=True)
         self.server_thread.start()
 
-    def view(self, path=''):
+    def visit(self, path=''):
         if not self.httpd or not self.server_thread.is_alive():
             self.start()
         port = self.httpd.server_address[1]

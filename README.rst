@@ -21,10 +21,19 @@ in both ways, but web browsers still tend to only support Brotli
 compression over https, due to the prevalence of broken proxy servers
 on the internet.)
 
-The package includes a script (compress_site.py) for compressing all of
-the .html, .css, .js and .woff files below a given site root directory.
-The tool is aware of Sphinx's tendency to produce many identical copies
-of the same (large) _static directory.  So it also collects the contents
-of all of the _static subdirectories into one _static directory in the
-root, replacing the others by symlinks.
+Source code is available on `Github <https://github.com/3-manifolds/cocoserver/>`_.
+The git repository includes a script (compress_site.py) for compressing all of
+the .html, .css, .js and .woff files below a given site root directory.  The
+tool is aware of Sphinx's tendency to produce many identical copies of the same
+(large) _static directory.  So it also collects the contents of all of the
+_static subdirectories into one _static directory in the root, replacing the
+others by symlinks.
+
+The server can be installed by running: ``python3 -m pip install cocoserver``.
+
+To use the server::
+  
+  >>> from cocoserver import StaticServer
+  >>> s = StaticServer('my/site/root')
+  >>> s.visit('mypage')
 
