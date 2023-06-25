@@ -1,6 +1,7 @@
-.PHONY: clean build testpypi-upload pypi-upload
+.PHONY: clean dist testpypi-upload pypi-upload
 
-build:
+dist:
+# Unset PIP_CONFIG_FILE in case pip.conf sets user = True
 	env PIP_CONFIG_FILE=/dev/null python3 -m build --sdist --wheel .
 
 clean:
