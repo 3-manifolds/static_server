@@ -23,9 +23,9 @@ on the internet.)
 
 Source code is available on `Github <https://github.com/3-manifolds/cocoserver/>`_.
 The git repository includes a script (compress_site.py) for compressing all of
-the .html, .css, .js and .woff files below a given site root directory.  The
-tool is aware of Sphinx's tendency to produce many identical copies of the same
-(large) _static directory.  So it also collects the contents of all of the
+the .html, .css, .js, .woff and .svg files below a given site root directory.
+The tool is aware of Sphinx's tendency to produce many identical copies of the
+same (large) _static directory.  So it also collects the contents of all of the
 _static subdirectories into one _static directory in the root, replacing the
 others by symlinks.
 

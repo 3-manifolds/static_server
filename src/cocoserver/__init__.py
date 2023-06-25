@@ -14,10 +14,17 @@ import importlib.metadata
 __version__ = '1.0.2'
 
 class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        self.logfile = kwargs.pop('logfile', None)
+        super().__init__(*args, **kwargs)
 
     def log_message(self, format, *args):
-        # We have no place for the log messages to go.
-        pass
+        if self.logfile:
+            message = format % args
+            self.logfile.write("%s - - [%s] %s\n" %
+                            (self.address_string(),
+                            self.log_date_time_string(),
+                            message.translate(self._control_char_table)))
 
     def send_head(self):
         """Common code for GET and HEAD commands.
@@ -70,8 +77,11 @@ class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
             try:
                 f = open(path, 'rb')
             except (FileNotFoundError, OSError):
-                self.send_error(HTTPStatus.NOT_FOUND,
-                    "File not found: %s" % path)
+                try:
+                    self.send_error(HTTPStatus.NOT_FOUND,
+                        "File not found: %s" % path)
+                except (BrokenPipeError, ConnectionResetError):
+                    pass
                 return None
         try:
             fs = os.fstat(f.fileno())
@@ -131,13 +141,18 @@ class StaticServer:
     root directory.
     """ 
 
-    def __init__(self, root_dir):
+    def __init__(self, root_dir, logfile=None):
         self.site_root = os.path.abspath(root_dir)
         self.httpd = None
+        self.logfile = logfile
+        if logfile and not hasattr(logfile, 'write'):
+            raise ValueError('The logfile must have a write method.')
         
     def start(self):
         server_address = ('', 0)
-        handler = partial(GzipHTTPRequestHandler, directory=self.site_root)
+        handler = partial(GzipHTTPRequestHandler,
+                              directory=self.site_root,
+                              logfile=self.logfile)
         self.httpd = ThreadingHTTPServer(server_address, handler)
         self.server_thread = Thread(target=self.httpd.serve_forever,
                                         daemon=True)
