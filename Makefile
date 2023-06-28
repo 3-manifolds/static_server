@@ -1,7 +1,7 @@
 .PHONY: usage clean dist testpypi-upload pypi-upload
 
 usage:
-	@echo Availalable make targets are: \
+	@echo Available make targets are: \
 	clean, dist, testpypi-upload, and pypi-upload	
 
 dist:
