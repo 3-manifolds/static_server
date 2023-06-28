@@ -11,7 +11,7 @@ import webbrowser
 import urllib.parse
 import importlib.metadata
 
-__version__ = '1.0.3'
+__version__ = '1.0.4'
 
 class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
