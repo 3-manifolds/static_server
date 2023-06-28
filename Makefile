@@ -1,4 +1,8 @@
-.PHONY: clean dist testpypi-upload pypi-upload
+.PHONY: usage clean dist testpypi-upload pypi-upload
+
+usage:
+	@echo Availalable make targets are: \
+	clean, dist, testpypi-upload, and pypi-upload	
 
 dist:
 # Unset PIP_CONFIG_FILE in case pip.conf sets user = True
