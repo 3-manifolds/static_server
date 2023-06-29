@@ -11,7 +11,7 @@ import webbrowser
 import urllib.parse
 import importlib.metadata
 
-__version__ = '1.0.5'
+__version__ = '1.0.6'
 
 class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -149,7 +149,7 @@ class StaticServer:
             raise ValueError('The logfile must have a write method.')
         
     def start(self):
-        server_address = ('', 0)
+        server_address = ('127.0.0.1', 0)
         handler = partial(GzipHTTPRequestHandler,
                               directory=self.site_root,
                               logfile=self.logfile)
