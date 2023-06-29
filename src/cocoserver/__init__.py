@@ -11,7 +11,7 @@ import webbrowser
 import urllib.parse
 import importlib.metadata
 
-__version__ = '1.0.7'
+__version__ = '1.0.8'
 
 class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -36,7 +36,6 @@ class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
         to the outputfile by the caller unless the command was HEAD,
         and must be closed by the caller under all circumstances), or
         None, in which case the caller has nothing further to do.
-
         """
         path = self.translate_path(self.path)
         have_gz = False
@@ -137,18 +136,22 @@ class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
 class StaticServer:
     """Runs an HTTP server in a background thread.
 
-    The server serves static files, possibly gzipped, from a specified
-    root directory.
-    """ 
-
+    The server serves static files, optionally gzipped in advance, from
+    a specified root directory.  Only the GET and HEAD methods are
+    supported.  Query strings are ignored. Thus form submission and file
+    uploads are not supported.
+    """
     def __init__(self, root_dir, logfile=None):
         self.site_root = os.path.abspath(root_dir)
         self.httpd = None
         self.logfile = logfile
         if logfile and not hasattr(logfile, 'write'):
             raise ValueError('The logfile must have a write method.')
-        
+
     def start(self):
+        """Start the server and return its address."""
+        # Only listen on the loopback interface.  This server is
+        # not intended to be accessed from the internet.
         server_address = ('127.0.0.1', 0)
         handler = partial(GzipHTTPRequestHandler,
                               directory=self.site_root,
@@ -160,13 +163,18 @@ class StaticServer:
         return tuple(self.httpd.server_address)
 
     def visit(self, path=''):
+        """Use the default browser to open a page on the site."""
         if not self.httpd or not self.server_thread.is_alive():
             self.start()
-        port = self.httpd.server_address[1]
-        url = os.path.join('http://localhost:%s' % port, path)
+        address, port = self.httpd.server_address
+        # The localhost domain could get resolved to a different
+        # address by a nasty nameserver.  So it is safer to use
+        # the dotted quad address for the loopback interface.
+        url = os.path.join('http://%s:%s/%s' % (address, port, path))
         webbrowser.open_new_tab(url)
-        
+
     def address(self):
+        """Return the ip address of this server."""
         if not self.httpd or not self.server_thread.is_alive():
             raise ValueError('Server is not running')
         return self.httpd.server_address
