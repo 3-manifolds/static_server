@@ -11,7 +11,7 @@ import webbrowser
 import urllib.parse
 import importlib.metadata
 
-__version__ = '1.0.6'
+__version__ = '1.0.7'
 
 class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -157,6 +157,7 @@ class StaticServer:
         self.server_thread = Thread(target=self.httpd.serve_forever,
                                         daemon=True)
         self.server_thread.start()
+        return tuple(self.httpd.server_address)
 
     def visit(self, path=''):
         if not self.httpd or not self.server_thread.is_alive():
@@ -165,3 +166,7 @@ class StaticServer:
         url = os.path.join('http://localhost:%s' % port, path)
         webbrowser.open_new_tab(url)
         
+    def address(self):
+        if not self.httpd or not self.server_thread.is_alive():
+            raise ValueError('Server is not running')
+        return self.httpd.server_address
