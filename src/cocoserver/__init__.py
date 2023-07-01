@@ -11,7 +11,7 @@ import webbrowser
 import urllib.parse
 import importlib.metadata
 
-__version__ = '1.0.8'
+__version__ = '1.0.9'
 
 class GzipHTTPRequestHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -178,3 +178,13 @@ class StaticServer:
         if not self.httpd or not self.server_thread.is_alive():
             raise ValueError('Server is not running')
         return self.httpd.server_address
+
+def main():
+    if len(sys.argv) != 2:
+        print('Provide the path of a site root as an argument.')
+        sys.exit(1)
+    StaticServer(sys.argv[1]).visit()
+    while True:
+        response = input('Type "stop" to stop the server:\n> ')
+        if response == 'stop':
+            sys.exit()

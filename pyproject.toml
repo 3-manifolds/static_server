@@ -28,6 +28,9 @@ classifiers = [
     "Topic :: Software Development :: Documentation"
 ]
 
+[project.scripts]
+coco = "cocoserver:main"
+
 [project.urls]
 "Homepage" = "https://github.com/3-manifolds/cocoserver"
 "Bug Tracker" = "https://github.com/3-manifolds/cocoserver/issues"

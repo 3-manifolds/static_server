@@ -37,3 +37,5 @@ To use the server::
   >>> s = StaticServer('my/site/root')
   >>> s.visit('mypage')
 
+The pip package also installs a console script named *coco* which can
+be used to view your static site, for example by running: ``coco /usr/local/share/doc/myproject``.
